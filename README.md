@@ -2,10 +2,6 @@
 
 **MyTodo** is a sleek and minimal to-do list manager built with **Flask** and **Bootstrap 5**. It provides essential task management features with user authentication, making it perfect for personal productivity.
 
-## 🚀 Live Demo
-
-👉 Try it out: [https://todo-web-app-1.onrender.com](https://todo-web-app-1.onrender.com)
-
 ---
 
 ## ✅ Features
@@ -98,6 +94,11 @@ Flask-Todo-Webapp/
 └── instance/
     └── todo.db           # SQLite database (auto-generated)
 ```
+---
+##### 🚀 Live Demo
+
+👉 Try it out: [https://todo-web-app-1.onrender.com](https://todo-web-app-1.onrender.com)
+
 
 ---
 
