@@ -17,6 +17,7 @@ pipeline{
         stage("Deploy"){
             steps{
                 echo "Deploying the application"
+                sh "docker rm -f todoapp || true"
                 sh "docker run -d --name todoapp -p 5000:5000 todoapp:latest"
             }
         }
