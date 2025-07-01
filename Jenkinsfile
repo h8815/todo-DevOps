@@ -17,7 +17,7 @@ pipeline{
         stage("Deploy"){
             steps{
                 echo "Deploying the application"
-                sh "docker compose  up -d"
+                sh "docker run -d --name todoapp -p 5000:5000 todoapp:latest"
             }
         }
     }
