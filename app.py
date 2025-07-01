@@ -107,9 +107,5 @@ def logout():
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-<<<<<<< HEAD
-    app.run(debug=True, host='0.0.0.0')
-=======
     app.run(debug=False, host='0.0.0.0', port=5000)
->>>>>>> 3836aff0018e9a20d90612951c9ca14d8a86d7d3
 
