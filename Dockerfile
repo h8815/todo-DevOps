@@ -12,7 +12,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # ------------------------------------
 
-# Stage 2: Slim image for runtime to reduce image size (~133 MB) 
+# Stage 2: Slim image for runtime to reduce image size (slim image: ~133 MB) 
 FROM python:3.13-slim  
 
 # Set working directory inside the runtime container
