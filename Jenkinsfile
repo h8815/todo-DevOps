@@ -11,14 +11,14 @@ pipeline{
         stage("Build"){
             steps{
                 echo "Building the application"
-                sh "docker build -t todoapp:latest ."
+                sh "docker build -t todowebapp:latest ."
             }
         }
         stage("Deploy"){
             steps{
                 echo "Deploying the application"
-                sh "docker rm -f todoapp || true"
-                sh "docker run -d --name todoapp -p 5000:5000 todoapp:latest"
+                sh "docker rm -f todowebapp || true"
+                sh "docker run -d --name todowebapp -p 5000:5000 todowebapp:latest"
             }
         }
     }
