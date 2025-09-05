@@ -5,6 +5,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from dotenv import load_dotenv
 import os
+from werkzeug.middleware.dispatcher import DispatcherMiddleware
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 # Load environment variables
 load_dotenv()
@@ -27,6 +29,9 @@ login_manager.login_view = 'login'
 login_manager.login_message = "Please log in to access this page."
 login_manager.login_message_category = "warning"
 
+# Apply ProxyFix for reverse proxy (Ingress)
+app.wsgi_app = ProxyFix(app.wsgi_app)
+
 # Models
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -41,7 +46,7 @@ class Todo(db.Model):
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
-# User loader for Flask-Login
+# User loader
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -142,3 +147,14 @@ def logout():
     logout_user()
     flash("You have been logged out.", "info")
     return redirect(url_for('login'))
+
+# ✅ Mount at /app for Ingress
+application = DispatcherMiddleware(Flask('dummy'), {
+    '/app': app
+})
+
+if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
+    from werkzeug.serving import run_simple
+    run_simple('0.0.0.0', 5000, application, use_reloader=False)

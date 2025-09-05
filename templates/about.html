@@ -4,13 +4,15 @@
   <div class="form-section">
     <h2 class="mb-4 text-primary">About MyTodo App</h2>
 
-    <p class="lead">Welcome to <strong>MyTodo</strong>, your minimal, clean, and modern to-do list manager built with 💖 using Flask and Bootstrap.</p>
+    <p class="lead">Welcome to <strong>MyTodo</strong>, your minimal, clean, and modern to-do list manager built with 💖
+      using Flask and Bootstrap.</p>
 
     <hr>
 
     <h4 class="mt-4 text-success">📌 Why this app?</h4>
     <p>
-      MyTodo is designed to help you stay organized, focused, and productive. Whether you're managing personal tasks, keeping track of work, or practicing your web development skills — this app has your back.
+      MyTodo is designed to help you stay organized, focused, and productive. Whether you're managing personal tasks,
+      keeping track of work, or practicing your web development skills — this app has your back.
     </p>
 
     <h4 class="mt-4 text-success">🛠️ Tech Stack</h4>
@@ -40,7 +42,7 @@
       Start small. Stay consistent. Keep building. 💪
     </div>
 
-    <a href="/" class="btn btn-outline-primary mt-3">Back to Home</a>
+    <a href="{{ url_for('home') }}" class="btn btn-outline-primary mt-3">Back to Home</a>
   </div>
 </div>
 {% endblock %}

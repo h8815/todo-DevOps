@@ -3,7 +3,7 @@
 <div class="container">
   <div class="form-section">
     <h2 class="mb-4 text-warning">Update Todo</h2>
-    <form action="/update/{{todo.sno}}" method="POST">
+    <form action="{{ url_for('update', sno=todo.sno) }}" method="POST">
       <div class="mb-3">
         <label for="title" class="form-label">Todo Title</label>
         <input type="text" class="form-control" name="title" id="title" value="{{todo.title}}">
