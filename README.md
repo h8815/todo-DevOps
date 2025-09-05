@@ -4,7 +4,7 @@
 
 ## 🚀 Live Demo
 
-👉 Try it out: [https://todo-web-app-1.onrender.com](https://todo-web-app-1.onrender.com)
+👉 Try it out: [[https://todo-web-app-1.onrender.com](https://todo-list-gcpj.onrender.com)]
 
 ---
 
@@ -65,7 +65,7 @@ flask run
 Or, run directly using Python:
 
 ```bash
-python app.py
+python run.py
 ```
 
 Then open your browser and navigate to:
@@ -87,22 +87,22 @@ To deploy your own version:
 ## 📁 Project Structure
 
 ```
-Flask-Todo-Webapp/
+ToDO/
 │
-├── app.py                # Main application
-├── requirements.txt      # Dependencies
-├── render.yaml           # Deployment config (Render)
+├── app.py             # Main Flask application
+├── run.py             # Entry point to run the app
+├── requirements.txt   # Python dependencies
+├── Dockerfile         # Docker build instructions
+├── Jenkinsfile        # Jenkins CI/CD pipeline
+├── render.yaml        # Render deployment config
 │
-├── templates/            # HTML templates (Jinja2)
-├── static/               # CSS & static assets
-└── instance/
-    └── todo.db           # SQLite database (auto-generated)
+├── templates/         # Jinja2 HTML templates
+├── static/            # CSS, JS, and static assets
+├── instance/
+│   └── todo.db        # SQLite database (auto-generated)
+│
+└── README.md          # Project documentation
 ```
-<<<<<<< HEAD
-
-=======
->>>>>>> 3836aff0018e9a20d90612951c9ca14d8a86d7d3
----
 
 ## 📄 License
 

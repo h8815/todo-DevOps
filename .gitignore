@@ -6,8 +6,7 @@ __pycache__/
 *.env
 
 # Virtual environment
-env/
-venv/
+.venv/
 
 # Flask-related files
 instance/
@@ -24,4 +23,3 @@ instance/
 # OS-specific files
 .DS_Store
 Thumbs.db
-.vercel
