@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: todo-deployment
-  namespace: todo-web
+  namespace: todo-web-ns
 spec:
   replicas: 1
   selector:
