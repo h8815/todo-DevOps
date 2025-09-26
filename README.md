@@ -1,4 +1,4 @@
-![CI](https://github.com/<your-username>/<your-repo>/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/h8815/todo-DevOps/actions/workflows/ci.yml/badge.svg)
 
 # 📝 MyTodo – Flask Web App
 
