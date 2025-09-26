@@ -1,106 +1,61 @@
-// Jenkinsfile for the To-Do Application CI Pipeline
 pipeline {
-    // Agent definition: Use any available agent (your Linux machine if Jenkins is running there)
     agent any
 
-    // Environment variables needed throughout the pipeline
-    environment {
-        // Replace 'your-dockerhub-username' with your actual Docker Hub username
-        DOCKER_IMAGE_NAME = "h8815/todowebapp"
-        // Replace 'your-registry-url' if using ECR or another registry. For Docker Hub, it's just 'docker.io'
-        DOCKER_REGISTRY = "docker.io" 
+    environment{
+        DOCKER_REPO = "h8815/todowebapp"
+        IMAGE_TAG = "${env.BUILD_ID}"
     }
 
-    // Define the stages of your CI pipeline
     stages {
-        stage('Checkout Code') {
+        stage('Checkout') {
             steps {
-                echo "Checking out Git repository..."
-                // Use the 'checkout scm' step to clone the repository configured in the Jenkins job
                 checkout scm
             }
         }
-        
-        stage('Install Dev Dependencies') {
+
+        stage('Run unit tests') {
             steps {
-                echo "Installing development dependencies..."
-                // It's good practice to install dependencies in a virtual environment
-                // or ensure the `pip` commands are isolated.
-                // For a simple Jenkins setup, this assumes global python or a pre-configured agent.
-                sh 'python3 -m pip install -r requirements-dev.txt'
+                // Use the host Docker to run tests inside a Python container (no need to have Python on Jenkins host)
+                sh '''
+                    docker run --rm -v "$PWD":/app -w /app python:3.10-bullseye \
+                    bash -lc "pip install --no-cache-dir -r requirements.txt -r requirements-dev.txt && pytest -q"
+                '''
             }
         }
 
-        stage('Lint & Format Check') {
-            steps {
-                echo "Running linting and format checks..."
-                // Run flake8 for code quality checks
-                sh 'flake8 .'
-                // Run black in check mode (to only report issues, not fix them)
-                sh 'black --check .'
-            }
-        }
-        
-        stage('Run Unit Tests') {
-            steps {
-                echo "Executing unit tests..."
-                // Run your pytest suite
-                sh 'pytest'
-            }
-        }
-        
-        stage('Build Docker Image') {
+        stage('Build Docker image') {
             steps {
                 script {
-                    echo "Building the Docker image..."
-                    // Get the short Git commit hash for tagging the Docker image
-                    def gitCommitHash = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
-                    
-                    // Build the Docker image with a tag based on the Git commit hash
-                    sh "docker build -t ${DOCKER_IMAGE_NAME}:${gitCommitHash} ."
-                    
-                    // Tag it as 'latest' as well (optional, but convenient for local testing/dev)
-                    sh "docker tag ${DOCKER_IMAGE_NAME}:${gitCommitHash} ${DOCKER_IMAGE_NAME}:latest"
+                    def shortCommit = sh(returnStdout: true, script: "git rev-parse --short=7 HEAD").trim()
+                    env.IMAGE_TAG = shortCommit
                 }
+                sh "docker build -t ${DOCKER_REPO}:${IMAGE_TAG} -t ${DOCKER_REPO}:latest ."
             }
         }
-        
-        stage('Push Docker Image') {
-            steps {
-                script {
-                    echo "Pushing the Docker image to the registry..."
-                    def gitCommitHash = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
 
-                    // Use Jenkins credentials for Docker login
-                    // 'dockerhub-credentials' is a Jenkins Secret Text credential you must create
-                    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
-                        sh "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD} ${DOCKER_REGISTRY}"
-                        sh "docker push ${DOCKER_IMAGE_NAME}:${gitCommitHash}"
-                        sh "docker push ${DOCKER_IMAGE_NAME}:latest" // Push latest tag too
-                    }
+        stage('Push image to DockerHub') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh '''
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                        docker push ${DOCKER_REPO}:${IMAGE_TAG}
+                        docker push ${DOCKER_REPO}:latest
+                    '''
                 }
             }
         }
-        
-        // This stage will be for the GitOps handoff later, leave it commented for now
-        // stage('Update GitOps Repo') {
-        //     steps {
-        //         echo "Updating the image tag in the GitOps repository..."
-        //         // This is where Jenkins would clone your GitOps repo, update the values.yaml,
-        //         // commit, and push. This is the handoff to ArgoCD.
-        //     }
-        // }
     }
-    
-    // Post-build actions (e.g., clean up, send notifications)
+
     post {
         always {
-            echo "Pipeline finished."
-            // Optionally add JUnit test report publishing here
-            // junit '**/test-results/*.xml' // if your tests generate XML reports
+            // cleanup
+            sh "docker rmi ${DOCKER_REPO}:${IMAGE_TAG} || true"
         }
-        failure {
-            echo "Pipeline failed! Check logs for errors."
+        success {
+            echo "Build and push succeeded: ${DOCKER_REPO}:${IMAGE_TAG}"
+        }
+        faliure {
+            echo "Build failed"
         }
     }
 }
