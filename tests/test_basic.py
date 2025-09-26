@@ -1,9 +1,9 @@
-from app import app
+import app as myapp
 
 
 def test_homepage():
     # Create a test client to interact with the app
-    client = app.test_client()
+    client = myapp.app.test_client()
 
     # Make a GET request to the homepage, telling the client to follow any redirects.
     # This is necessary because the app is likely redirecting from the homepage,
