@@ -1,3 +1,5 @@
+![CI](https://github.com/<your-username>/<your-repo>/actions/workflows/ci.yml/badge.svg)
+
 # 📝 MyTodo – Flask Web App
 
 **MyTodo** is a sleek and minimal to-do list manager built with **Flask** and **Bootstrap 5**. It provides essential task management features with user authentication, making it perfect for personal productivity.
