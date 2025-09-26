@@ -30,7 +30,7 @@ pipeline {
           def shortCommit = sh(returnStdout: true, script: "git rev-parse --short=7 HEAD").trim()
           env.IMAGE_TAG = shortCommit
         }
-        sh "docker build -t ${DOCKER_REPO}:${IMAGE_TAG} -t ${DOCKER_REPO}:latest ."
+        sh "docker build -t ${DOCKER_REPO}:${IMAGE_TAG} ."
       }
     }
 
@@ -40,7 +40,6 @@ pipeline {
           sh '''
             echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
             docker push ${DOCKER_REPO}:${IMAGE_TAG}
-            docker push ${DOCKER_REPO}:latest
           '''
         }
       }
