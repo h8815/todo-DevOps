@@ -16,11 +16,10 @@ import os
 # Load environment variables
 load_dotenv()
 secret_key = os.getenv("SECRET_KEY")
-db_url = os.getenv("DATABASE_URL")
 
 # Flask app configuration
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = db_url
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///todo.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SECRET_KEY"] = secret_key
 
