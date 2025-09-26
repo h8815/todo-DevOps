@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ![CI](https://github.com/h8815/todo-DevOps/actions/workflows/ci.yml/badge.svg)
+=======
+![CI](https://github.com/h8815/todo-devops/actions/workflows/ci.yml/badge.svg)
+>>>>>>> ef6556f (adding ci.yml)
 
 # 📝 MyTodo – Flask Web App
 
