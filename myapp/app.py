@@ -13,6 +13,9 @@ from datetime import datetime
 from dotenv import load_dotenv
 import os
 
+# Import Prometheus libraries
+from prometheus_client import generate_latest, Counter, Histogram
+
 # Load environment variables
 load_dotenv()
 secret_key = os.getenv("SECRET_KEY")
@@ -34,20 +37,9 @@ login_manager.login_message = "Please log in to access this page."
 login_manager.login_message_category = "warning"
 
 
-# Models
-class User(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(150), unique=True, nullable=False)
-    password = db.Column(db.String(150), nullable=False)
-    todos = db.relationship("Todo", backref="owner", lazy=True)
-
-
-class Todo(db.Model):
-    sno = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(200), nullable=False)
-    desc = db.Column(db.String(500), nullable=False)
-    date_created = db.Column(db.DateTime, default=datetime.utcnow)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+# Prometheus Metrics
+REQUESTS = Counter('flask_app_requests_total', 'Total number of requests to the Flask app.')
+REQUEST_LATENCY = Histogram('flask_app_request_latency_seconds', 'Request latency in seconds.')
 
 
 # User loader for Flask-Login
@@ -57,6 +49,11 @@ def load_user(user_id):
 
 
 # Routes
+@app.route("/metrics")
+def metrics():
+    return generate_latest()
+
+
 @app.route("/", methods=["GET", "POST"])
 @login_required
 def home():
@@ -83,6 +80,32 @@ def home():
         "index.html", allTodo=allTodo, username=current_user.username
     )
 
+
+@app.before_request
+def before_request_metric():
+    REQUESTS.inc()
+
+
+@app.after_request
+def after_request_metric(response):
+    REQUEST_LATENCY.observe(response.elapsed.total_seconds())
+    return response
+
+
+# Models
+class User(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(150), unique=True, nullable=False)
+    password = db.Column(db.String(150), nullable=False)
+    todos = db.relationship("Todo", backref="owner", lazy=True)
+
+
+class Todo(db.Model):
+    sno = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable=False)
+    desc = db.Column(db.String(500), nullable=False)
+    date_created = db.Column(db.DateTime, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 
 @app.route("/update/<int:sno>", methods=["GET", "POST"])
 @login_required
