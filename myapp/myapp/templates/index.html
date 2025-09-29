@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block mainbody %}
+<div class="container mt-4">
+  <!-- Welcome Message -->
+  <div class="text-center mb-4">
+    <h3 class="fw-bold text-dark">Welcome, {{ current_user.username }}!</h3>
+    <p class="text-muted">Manage your tasks efficiently with MyTodo.</p>
+  </div>
+
+  <!-- Add Todo Form -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h4 class="text-primary mb-3">Add a New Todo</h4>
+      <form action="{{ url_for('home') }}" method="POST">
+        <div class="mb-3">
+          <label for="title" class="form-label">Todo Title</label>
+          <input type="text" class="form-control" name="title" id="title" required>
+        </div>
+        <div class="mb-3">
+          <label for="desc" class="form-label">Todo Description</label>
+          <textarea class="form-control" name="desc" id="desc" rows="3" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Todo</button>
+      </form>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- Todo List -->
+  <div class="todo-section">
+    <h4 class="mb-3 text-success">Your Todo List</h4>
+
+    {% if allTodo|length == 0 %}
+    <div class="alert alert-dark" role="alert">
+      No Todos to show! Use the above form to add a todo.
+    </div>
+    {% else %}
+    <div class="row row-cols-1 row-cols-md-2 g-4 mt-3">
+      {% for todo in allTodo %}
+      <div class="col">
+        <div class="card shadow-sm h-100 border-0">
+          <div class="card-body">
+            <h5 class="card-title">{{ todo.title }}</h5>
+            <p class="card-text">{{ todo.desc }}</p>
+            <p class="text-muted small">
+              <i class="bi bi-clock"></i> {{ todo.date_created.strftime('%b %d, %Y %I:%M %p') }}
+            </p>
+            <a href="{{ url_for('update', sno=todo.sno) }}" class="btn btn-outline-success btn-sm">
+              <i class="bi bi-pencil-square"></i> Edit
+            </a>
+            <a href="{{ url_for('delete', sno=todo.sno) }}" class="btn btn-outline-danger btn-sm"
+              onclick="return confirm('Are you sure you want to delete this todo?');">
+              <i class="bi bi-trash"></i> Delete
+            </a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
