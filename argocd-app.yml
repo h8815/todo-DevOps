@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default # Argo CD project
   source: # Git repo details
-  repoURL: https://github.com/h8815/todo-DevOps.git # Git repo URL
+    repoURL: https://github.com/h8815/todo-DevOps.git # Git repo URL
     targetRevision: HEAD # Branch (main/master)
     path: k8s/flask-todo # Folder in repo
   destination: # Where to deploy
