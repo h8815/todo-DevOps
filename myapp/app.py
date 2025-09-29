@@ -40,8 +40,12 @@ login_manager.login_message_category = "warning"
 
 
 # Prometheus Metrics
-REQUESTS = Counter('flask_app_requests_total', 'Total number of requests to the Flask app.')
-REQUEST_LATENCY = Histogram('flask_app_request_latency_seconds', 'Request latency in seconds.')
+REQUESTS = Counter(
+    "flask_app_requests_total", "Total number of requests to the Flask app."
+)
+REQUEST_LATENCY = Histogram(
+    "flask_app_request_latency_seconds", "Request latency in seconds."
+)
 
 
 # User loader for Flask-Login
@@ -91,11 +95,10 @@ def before_request_metric():
 
 @app.after_request
 def after_request_metric(response):
-    if hasattr(g, 'start_time'):
+    if hasattr(g, "start_time"):
         latency = time.time() - g.start_time
         REQUEST_LATENCY.observe(latency)
     return response
-
 
 
 # Models
@@ -112,6 +115,7 @@ class Todo(db.Model):
     desc = db.Column(db.String(500), nullable=False)
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+
 
 @app.route("/update/<int:sno>", methods=["GET", "POST"])
 @login_required
