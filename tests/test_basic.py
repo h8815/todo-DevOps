@@ -1,5 +1,6 @@
 from myapp import app
 
+
 def test_homepage_redirects_and_loads_login():
     client = app.test_client()
     response = client.get("/", follow_redirects=True)

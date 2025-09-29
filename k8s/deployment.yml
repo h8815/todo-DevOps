@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: todo-deployment
-  namespace: todo-web-ns
+  namespace: todo-ns
 spec:
   replicas: 1
   selector:
@@ -15,6 +15,6 @@ spec:
     spec:
       containers:
         - name: todo-web-app
-          image: h8815/todowebapp:02
+          image: h8815/todowebapp:04
           ports:
             - containerPort: 5000
