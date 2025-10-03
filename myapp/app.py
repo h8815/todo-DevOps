@@ -15,8 +15,7 @@ import os
 
 # Import Prometheus libraries
 from prometheus_client import generate_latest, Counter, Histogram
-import time
-from flask import g
+from prometheus_client import start_http_server
 
 # Load environment variables
 load_dotenv()
@@ -85,20 +84,6 @@ def home():
     return render_template(
         "index.html", allTodo=allTodo, username=current_user.username
     )
-
-
-@app.before_request
-def before_request_metric():
-    REQUESTS.inc()
-    g.start_time = time.time()
-
-
-@app.after_request
-def after_request_metric(response):
-    if hasattr(g, "start_time"):
-        latency = time.time() - g.start_time
-        REQUEST_LATENCY.observe(latency)
-    return response
 
 
 # Models
