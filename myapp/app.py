@@ -53,7 +53,8 @@ def load_user(user_id):
 # Routes
 @app.route("/metrics")
 def metrics():
-    return generate_latest()
+    from prometheus_client import CONTENT_TYPE_LATEST
+    return generate_latest(), 200, {'Content-Type': CONTENT_TYPE_LATEST}
 
 
 @app.route("/", methods=["GET", "POST"])
