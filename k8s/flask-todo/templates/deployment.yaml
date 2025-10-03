@@ -4,6 +4,7 @@ metadata:
   name: {{ include "flask-todo.fullname" . }}
   labels:
     {{- include "flask-todo.labels" . | nindent 4 }}
+    app: flask-todo
   namespace: todo-ns
 spec:
   {{- if not .Values.autoscaling.enabled }}
