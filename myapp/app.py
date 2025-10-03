@@ -12,10 +12,11 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from dotenv import load_dotenv
 import os
+import time
+from flask import g
 
 # Import Prometheus libraries
 from prometheus_client import generate_latest, Counter, Histogram
-from prometheus_client import start_http_server
 
 # Load environment variables
 load_dotenv()
@@ -39,12 +40,8 @@ login_manager.login_message_category = "warning"
 
 
 # Prometheus Metrics
-REQUESTS = Counter(
-    "flask_app_requests_total", "Total number of requests to the Flask app."
-)
-REQUEST_LATENCY = Histogram(
-    "flask_app_request_latency_seconds", "Request latency in seconds."
-)
+REQUESTS = Counter('flask_app_requests_total', 'Total number of requests to the Flask app.')
+REQUEST_LATENCY = Histogram('flask_app_request_latency_seconds', 'Request latency in seconds.')
 
 
 # User loader for Flask-Login
@@ -84,6 +81,20 @@ def home():
     return render_template(
         "index.html", allTodo=allTodo, username=current_user.username
     )
+
+
+@app.before_request
+def before_request_metric():
+    REQUESTS.inc()
+    g.start_time = time.time()
+
+
+@app.after_request
+def after_request_metric(response):
+    if hasattr(g, "start_time"):
+        latency = time.time() - g.start_time
+        REQUEST_LATENCY.observe(latency)
+    return response
 
 
 # Models
