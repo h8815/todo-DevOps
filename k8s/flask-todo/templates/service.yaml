@@ -4,6 +4,7 @@ metadata:
   name: {{ include "flask-todo.fullname" . }}
   labels:
     {{- include "flask-todo.labels" . | nindent 4 }}
+    app: flask-todo
   namespace: todo-ns
 spec:
   type: {{ .Values.service.type }}
@@ -15,3 +16,4 @@ spec:
       name: http
   selector:
     {{- include "flask-todo.selectorLabels" . | nindent 4 }}
+    app: flask-todo
