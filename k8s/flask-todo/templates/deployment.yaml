@@ -13,6 +13,7 @@ spec:
   selector:
     matchLabels:
       {{- include "flask-todo.selectorLabels" . | nindent 6 }}
+      app: flask-todo
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -24,6 +25,7 @@ spec:
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
+        app: flask-todo
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -47,10 +49,10 @@ spec:
               containerPort: {{ .Values.service.port }}
               protocol: TCP
           env:
-           {{- range $key, $value := .Values.env }}
-             - name: {{ $key }}
-               value: "{{ $value }}"
-           {{- end }}
+            {{- range $key, $value := .Values.env }}
+            - name: {{ $key }}
+              value: "{{ $value }}"
+            {{- end }}
           {{- with .Values.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}
