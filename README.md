@@ -24,7 +24,7 @@ It combines a lightweight **Flask + Bootstrap** frontend with a robust **contain
 
 Here’s the complete end-to-end pipeline that powers the project:
 
-![Workflow](assets/workflow-2.png)
+![Workflow](assets/workflow-2.jpg)
 
 ### 🔧 Workflow Breakdown
 1. **Developer** pushes code to **GitHub**
