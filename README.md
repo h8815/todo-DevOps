@@ -1,6 +1,6 @@
 # 🧩 MyTodo – Flask Web App with Full DevOps Pipeline 🚀
 
-[![Build Status](https://img.shields.io/badge/Jenkins-Build%20Passing-brightgreen?logo=jenkins&logoColor=white)](http://your-jenkins-server-url/job/MyTodo/)
+![Build Status](https://img.shields.io/badge/Jenkins-Build%20Passing-brightgreen?logo=jenkins&logoColor=white)
 [![Docker Pulls](https://img.shields.io/docker/pulls/h8815/todowebapp?logo=docker)](https://hub.docker.com/r/h8815/todowebapp)
 [![GitHub Repo](https://img.shields.io/badge/GitHub-h8815%2Ftodo--DevOps-blue?logo=github)](https://github.com/h8815/todo-DevOps)
 ![Python](https://img.shields.io/badge/Python-3.8%2B-blue?logo=python)
